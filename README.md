@@ -1,58 +1,89 @@
-Auton AI 🎭
+# Auton AI 🎭
 
-Auton AI is a terminal-first, open-source test automation engineer designed to live in your command line. It automatically converts natural language test criteria, user stories, or manual QA steps into production-ready, highly reliable Playwright or Cypress scripts. Powered by Gemini, Auton AI eliminates the boilerplate of writing E2E (end-to-end) tests while enforcing strict, modern locator and waiting best practices.
+Auton AI is a web-based, AI-powered test automation engineer. Describe test criteria, user stories, or manual QA steps in natural language and it generates production-ready **Playwright** (TypeScript or JavaScript) or **Cypress** scripts — then lets you refine them interactively in plain English. Powered by Google's Gemini API.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
-
-
- 📖 Project Description
-
-Auton AI bridges the gap between natural language requirements and robust automated test suites. Instead of manually inspecting DOM structures and writing brittle selectors, developers and QA engineers can describe a user journey in plain English. Auton AI analyzes the target framework patterns, generates syntactically flawless test code, and structures it into proper test suites (`test.describe` / `it` blocks).
-
-Built to match production standards, Auton AI defaults to modern locator strategies (like `page.getByRole` or `page.getByPlaceholder` in Playwright) to avoid flaky tests. It completely outlaws arbitrary hardcoded pauses, ensuring every script adheres to optimal async waiting mechanics.
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/mhklogs/AutonAI/pulls)
 
 ---
 
-💡 Key Use Cases
+## ✨ Features
 
-*   **Manual-to-Automated QA Translation:** Feed standard, bulleted QA manual test sheets directly into the terminal and receive fully formed `.spec.ts` or `.cy.js` files ready to run.
-*   **Rapid Regression Suite Scaffolding:** Spin up entire suites of smoke or regression tests for a new feature path in seconds by describing the intended user behavior.
-*   **TDD / BDD Framework Setup:** Write your test criteria in natural language *before* implementing a feature, allowing Auton AI to generate the failing test scripts for your development cycle.
-*   **Cross-Framework Script Migration:** Easily translate existing Cypress Javascript routines into modern Playwright TypeScript suites with a single prompt.
+- **Dual framework output** — Native Playwright TS/JS and Cypress JS generation from a single prompt.
+- **Strict smart-locator engine** — Prefers modern, accessible-first locators (`getByRole`, `getByLabel`, `getByPlaceholder`) over brittle XPaths and deep CSS chains.
+- **Zero-flakiness defaults** — Relies on built-in auto-waiting instead of hardcoded sleeps (`page.waitForTimeout`, `cy.wait`).
+- **Architect's Notes** — Every generation includes a strategy report covering assumptions, selector choices, and wait strategies.
+- **Interactive refactoring** — Ask for changes ("use a custom viewport", "mock a 500 error") and regenerate the script in place.
+- **Session history** — Recently generated scripts are kept for the browser session so you can jump back to previous results.
 
+## 🚀 Quick Start
 
+**Prerequisites:** Node.js 20+
 
-⚙️ Core Functionality & Features
-
-*   **Dual Framework Native Output:** Full, native support for generating both **Playwright (TypeScript/JavaScript)** and **Cypress (JavaScript)** syntax structures.
-*   **Strict Smart-Locator Engine:** Enforces modern, accessible-first locator practices. It intentionally avoids fragile XPath paths or deep, easily broken CSS hierarchies unless absolutely necessary.
-*   **Zero-Flakiness Guarantee:** Rejects unsafe automation practices. It handles element visibility checks and asynchronous transitions using built-in auto-waiting mechanisms instead of hardcoded sleeps (like `page.waitForTimeout(5000)`).
-*   **Clean Markdown & File Exports:** Outputs isolated code blocks complete with a detailed "Architect’s Notes" section outlining any assumed URLs, structural assumptions, or environmental conditions.
-
-📦 Installation on Linux
-
- Method 1: Quick Install Script (Recommended)
-Download the binary optimized for your Linux architecture and append it straight to your local path:
 ```bash
-curl -fsSL [https://auton.ai/install](https://auton.ai/install) | bash
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 1. Install dependencies
+npm install
 
-# Run and deploy your AI Studio app
+# 2. Configure your Gemini API key
+echo "GEMINI_API_KEY=your_key_here" > .env.local
 
-This contains everything you need to run your app locally.
+# 3. Run the app
+npm run dev
+```
 
-View your app in AI Studio: https://ai.studio/apps/ba98075f-25d6-4dab-b8b8-e2779d825425
+Then open http://localhost:3000. The Vite dev server proxies `/api` requests to the Express backend on port 3000.
 
-## Run Locally
+> **No API key?** The UI still loads. You'll see a friendly "API key not configured" message when you try to generate instead of a crash.
 
-**Prerequisites:**  Node.js
+## 🏗️ Production Build
 
+```bash
+npm run build   # bundles the frontend (Vite) and backend (esbuild)
+npm run start   # serves dist/ via the bundled Express server
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🧪 Use Cases
+
+- **Manual-to-automated QA translation** — paste bulleted manual test sheets and get ready-to-run `.spec.ts` / `.cy.js` files.
+- **Rapid regression scaffolding** — describe a feature path and spin up smoke/regression suites in seconds.
+- **TDD / BDD setup** — write criteria before implementing a feature to generate failing tests first.
+- **Cross-framework migration** — translate existing Cypress routines into modern Playwright TypeScript.
+
+## 🛠️ How to Use the Generated Tests
+
+- **Playwright:** drop specs into your `tests/` folder and run `npx playwright test`.
+- **Cypress:** drop specs into `cypress/e2e/` and run `npx cypress run`.
+
+## 🔧 Commands
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start dev server with HMR on port 3000 |
+| `npm run build` | Production build (frontend + backend) |
+| `npm run start` | Run the production server |
+| `npm run lint` | Type-check the codebase (`tsc --noEmit`) |
+
+## 🧠 How It Works
+
+1. You describe a user journey in the **Automation Requirements** panel (or load a preset).
+2. The backend sends your criteria plus guideline options (POM structure, strict semantic locators, explicit viewport config) to Gemini with a strict system prompt.
+3. Gemini returns a fully formed script plus an Architect's Notes report, validated against a JSON schema.
+4. The result is rendered with syntax highlighting; use **Refactor** to iterate on it.
+
+## 📁 Project Structure
+
+```
+├── server.ts              # Express backend + Gemini API integration
+├── src/
+│   ├── App.tsx            # Main app UI
+│   ├── data/templates.ts  # Example test presets
+│   ├── utils/highlighter.ts
+│   └── types.ts
+├── index.html
+├── manifest.json          # PWA manifest
+└── sw.js                  # Service worker (network-first for API, cache-first for static)
+```
+
+## 📄 License
+
+MIT

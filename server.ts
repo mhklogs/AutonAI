@@ -22,11 +22,11 @@ app.use((req, res, next) => {
 // Lazy-initialized Gemini client
 let aiClient: GoogleGenAI | null = null;
 
-function getGemini(): GoogleGenAI {
+function getGemini(): GoogleGenAI | null {
   if (!aiClient) {
     const key = process.env.GEMINI_API_KEY;
     if (!key) {
-      throw new Error("GEMINI_API_KEY is missing. Please add your Gemini API Key in Settings > Secrets.");
+      return null;
     }
     aiClient = new GoogleGenAI({
       apiKey: key,
@@ -73,6 +73,11 @@ app.post("/api/generate", async (req, res) => {
     }
 
     const ai = getGemini();
+    if (!ai) {
+      return res.status(503).json({ 
+        error: "GEMINI_API_KEY is not configured. Add your Gemini API key to .env.local to enable AI generation." 
+      });
+    }
 
     const prompt = `Convert the following test criteria into a ${framework} automation script.
     
@@ -87,7 +92,7 @@ Options:
 Generate the fully-formed script conforming to the Auton AI standards.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         systemInstruction: systemPrompt,
@@ -139,6 +144,11 @@ app.post("/api/refactor", async (req, res) => {
     }
 
     const ai = getGemini();
+    if (!ai) {
+      return res.status(503).json({ 
+        error: "GEMINI_API_KEY is not configured. Add your Gemini API key to .env.local to enable AI generation." 
+      });
+    }
 
     const prompt = `Refactor the following automation script based on the instruction.
 
@@ -157,7 +167,7 @@ ${instruction}
 Please update the script to fully incorporate the instruction, preserving all other functional code. Conform strictly to the Auton AI best practices.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         systemInstruction: systemPrompt,
