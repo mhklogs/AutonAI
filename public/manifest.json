@@ -1,0 +1,17 @@
+{
+  "name": "Auton AI",
+  "short_name": "Auton AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F3",
+  "theme_color": "#2B4E6F",
+  "description": "Turn plain-English test criteria into production-ready Playwright and Cypress automation scripts — then refine them in place.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
